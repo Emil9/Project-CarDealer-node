@@ -47,5 +47,11 @@ router.patch("/:carId", (req,res,next)=>{
     .catch(err => res.status(500).json({error:err}));
 });
 
+router.delete("/:carId", (req,res,next)=>{
+    const id = req.params.carId;
+    Car.remove({_id:id}).exec()
+    .then(result => res.status(200).json({message: "Samochód został kupiony"}))
+    .catch(err => res.status(500).json({error:err}));
+});
 
 module.exports = router;
