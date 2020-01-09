@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+mongoose.set('useCreateIndex', true) //usuwa zbędny komunikat
 
 const Car = require("../models/car");
 
@@ -33,5 +34,18 @@ router.get("/:carId", (req,res,next)=>{
     .then(doc => res.status(200).json(doc))
     .catch(err => res.status(500).json({error:err}));
 });
+
+router.patch("/:carId", (req,res,next)=>{
+    const id = req.params.carId;
+    Car.update({_id:id}, 
+        {$set:{
+            name: req.body.name,
+            price: req.body.price
+        }}
+        ).exec()
+    .then(newCar => res.status(200).json(newCar))
+    .catch(err => res.status(500).json({error:err}));
+});
+
 
 module.exports = router;
