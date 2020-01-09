@@ -24,3 +24,10 @@ router.post("/", (req,res,next)=>{
     })
     .catch(err =>res.status(500).json({error:err}));
 });
+
+router.get("/:rentalId", (req,res,next)=>{
+    const id = req.params.rentalId;
+    Rental.findById(id).exec()
+    .then(doc => res.status(200).json(doc))
+    .catch(err => res.status(500).json({error:err}));
+});
