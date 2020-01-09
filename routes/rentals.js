@@ -31,3 +31,12 @@ router.get("/:rentalId", (req,res,next)=>{
     .then(doc => res.status(200).json(doc))
     .catch(err => res.status(500).json({error:err}));
 });
+
+router.delete("/:rentalId", (req,res,next)=>{
+    const id = req.params.rentalId;
+    Rental.remove({_id:id}).exec()
+    .then(result => res.status(200).json({message: "Zakończenie wypożyczenia o numerze " + id}))
+    .catch(err => res.status(500).json({error:err}));
+});
+
+module.exports = router;
