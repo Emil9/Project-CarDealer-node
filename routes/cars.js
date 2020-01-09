@@ -35,12 +35,13 @@ router.get("/", (req,res,next)=>{
     .catch(err =>res.status(500).json({error: err}));
 });
 
-router.post("/", upload.single("productImage"), (req,res,next)=>{
+router.post("/", upload.single("carImage"), (req,res,next)=>{
     console.log(req.file);
     const car = new Car({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        carImage: req.file.path
     });
     car.save()
     .then(result => {
