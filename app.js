@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 
-mongoose.connect("mongodb+srv://Projekt:<password>@projekt-wbv8q.mongodb.net/test?retryWrites=true&w=majority",{ useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb+srv://Projekt:"+process.env.ATLAS_PWD+"@projekt-wbv8q.mongodb.net/test?retryWrites=true&w=majority",{ useNewUrlParser: true, useUnifiedTopology: true});
 
 app.use(morgan("dev"));
 
