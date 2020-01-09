@@ -12,6 +12,8 @@ mongoose.connect("mongodb+srv://Projekt:"+process.env.ATLAS_PWD+"@projekt-wbv8q.
 
 app.use(morgan("dev"));
 
+app.use("/uploads", express.static("uploads"));
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use("/cars", carRouts);
