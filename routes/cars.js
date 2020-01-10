@@ -2,36 +2,39 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require("multer");
-mongoose.set('useCreateIndex', true) //usuwa zbędny komunikat
-
+const checkAuth = require("../middleware/check-auth");
 const Car = require("../models/car");
 
-const memory = multer.diskStorage({
-    destination: function(req, file, cb) {
+mongoose.set('useCreateIndex', true) //usuwa zbędny komunikat
+
+const storage = multer.diskStorage({
+    destination: function(req,file,cb) {
         cb(null, "./uploads/");
     },
-    filename: function(req, file, cb) {
-        cb(null, new Date().toISOString().replace(":","_").replace(":","_") + file.originalname);
+    filename: function(req,file,cb) {
+        cb(null, new Date().toISOString().replace(':','_').replace(':','_') + file.originalname)
     }
 })
 
-const fileSearch = (req, file, cb) => {
-    if(file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
-        cb(null, true)
-    } else {
-    cb(null, false)
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype === "image/jpeg" || file.mimetype === "image/png"){
+        cb(null, true) 
+    }else{
+        cb(null, false)
     }
 }
 
 const upload = multer({
-    memory: memory,
-    limits: { fileSize: 1024*1024*5},
-    fileSearch: fileSearch
+    storage: storage,
+    limits: {fileSize: 1024*1024*5},
+    fileFilter: fileFilter
 });
 
 router.get("/", (req,res,next)=>{
     Car.find().exec()
-    .then(docs => res.status(200).json(docs))
+    .then(docs => {
+        res.status(200).json(docs)
+    })
     .catch(err =>res.status(500).json({error: err}));
 });
 
@@ -60,8 +63,9 @@ router.get("/:carId", (req,res,next)=>{
     .catch(err => res.status(500).json({error:err}));
 });
 
-router.patch("/:carId", (req,res,next)=>{
+router.patch("/:carId", checkAuth, (req,res,next)=>{
     const id = req.params.carId;
+    console.log(req.file);
     Car.update({_id:id}, 
         {$set:{
             name: req.body.name,
