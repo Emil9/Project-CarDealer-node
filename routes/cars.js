@@ -30,7 +30,7 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-router.get("/", (req,res,next)=>{
+router.get("/", checkAuth, (req,res,next)=>{
     Car.find().exec()
     .then(docs => {
         res.status(200).json(docs)
@@ -38,7 +38,7 @@ router.get("/", (req,res,next)=>{
     .catch(err =>res.status(500).json({error: err}));
 });
 
-router.post("/", upload.single("carImage"), (req,res,next)=>{
+router.post("/", checkAuth, upload.single("carImage"), (req,res,next)=>{
     console.log(req.file);
     const car = new Car({
         _id: new mongoose.Types.ObjectId(),
